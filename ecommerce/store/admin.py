@@ -4,11 +4,11 @@ from .models import Image, Item, Order, Transaction
 
 
 class ItemAdmin(admin.ModelAdmin):
-    list_display = ('name', 'price', 'quantity', 'units')
+    list_display = ('id', 'name', 'price', 'quantity', 'units')
 
 
 class OrderAdmin(admin.ModelAdmin):
-    fields = ('item', 'delievery', 'discount', 'status', 'user')
+    list_display = ('id', 'user', 'delievery', 'status')
 
 
 admin.site.register(Image)
