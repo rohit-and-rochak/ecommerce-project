@@ -16,4 +16,4 @@ class Transaction(BaseModel):
     order   = models.ForeignKey(Order, on_delete=models.CASCADE)                             # noqa E221
 
     def __str__(self):
-        return f"Transaction for {self.amount} on {self.created_at} is {self.status}"
+        return f"Transaction for {self.amount} on {str(self.created_at).split()[0]} is {self.status.lower()}"
