@@ -15,5 +15,5 @@ class Item(BaseModel):
     description = models.TextField(max_length=500, blank=True, default=True)                                                    # noqa E221
     price       = models.DecimalField(max_digits=10, decimal_places=2)                                                          # noqa E221
     discount    = models.PositiveSmallIntegerField(default=0, null=False, blank=True)                                           # noqa E221
-    category    = models.CharField(max_length=20, choices=Category.choices, default=Category.GENERIC, null=False, blank=False)  # noqa E221
+    category    = models.CharField(max_length=20, choices=Category.choices, default=Category.GENERIC, null=False, blank=True)  # noqa E221
     order       = models.ManyToManyField(Order)                                                                                 # noqa E221
