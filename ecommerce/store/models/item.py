@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.db import models
 
 from base.models import BaseModel
@@ -25,3 +27,7 @@ class Item(BaseModel):
 
     def __str__(self):
         return f"{self.name} @ {self.price}"
+
+    def get_price(self):
+        discount_factor = Decimal(1-self.discount/100)
+        return round(self.price * discount_factor, 2)
