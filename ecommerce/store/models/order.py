@@ -8,7 +8,7 @@ from .item import Item
 
 class Order(BaseModel):
     class Delievery(models.TextChoices):
-        HOME_DELIEVERY = 'HOME_DELIEVERY'
+        HOME_DELIEVERY = 'HOME DELIEVERY'
         PICKUP = 'PICKUP'
 
     class Status(models.TextChoices):
@@ -25,4 +25,4 @@ class Order(BaseModel):
     user      = models.ForeignKey(User, on_delete=models.CASCADE)                                                                    # noqa E221
 
     def __str__(self):
-        return f"Order for {self.user.firstname} needs {self.delievery}"
+        return f"{self.delievery.lower()} order for {self.user}"
