@@ -22,3 +22,6 @@ class Item(BaseModel):
     price       = models.DecimalField(max_digits=10, decimal_places=2)                                                          # noqa E221
     quantity    = models.DecimalField(max_digits=4, decimal_places=2, default=0)                                                # noqa E221
     units       = models.CharField(max_length=10, choices=Unit.choices, default=Unit.NOS)                                       # noqa E221
+
+    def __str__(self):
+        return f"{self.name} @ {self.price}"

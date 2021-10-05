@@ -23,3 +23,6 @@ class Order(BaseModel):
     item      = models.ManyToManyField(Item)                                                                                            # noqa E221
     status    = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING, null=False, blank=True)                 # noqa E221
     user      = models.ForeignKey(User, on_delete=models.DO_NOTHING)                                                                    # noqa E221
+
+    def __str__(self):
+        return f"Order for {self.user.firstname} needs {self.delievery}"
