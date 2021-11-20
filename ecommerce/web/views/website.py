@@ -1,8 +1,10 @@
 from django.shortcuts import render
+from store.models import Item
 
 
 def home(request):
-    return render(request, 'home.html')
+    items = Item.objects.all()
+    return render(request, 'home.html', {'items': items})
 
 
 def shop(request):
