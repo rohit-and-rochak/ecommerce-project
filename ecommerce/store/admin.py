@@ -1,9 +1,9 @@
 from django.contrib import admin
 
-from .models import Image, Item, Order, Transaction
+from .models import Image, Product, Order, Transaction
 
 
-class ItemAdmin(admin.ModelAdmin):
+class ProductAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'price', 'quantity')
 
 
@@ -12,6 +12,6 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Image)
-admin.site.register(Item, ItemAdmin)
+admin.site.register(Product, ProductAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Transaction)

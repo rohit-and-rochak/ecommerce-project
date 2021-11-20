@@ -8,5 +8,5 @@ urlpatterns = [
     path('about/', website.about, name='about'),
     path('cart/', website.cart, name='cart'),
     path('checkout/', website.checkout, name='checkout'),
-    path('item/<uuid:pk>/', website.item, name='item')
+    path('product/<uuid:pk>/', website.product, name='product')
 ]
