@@ -4,7 +4,7 @@ from .models import Image, Item, Order, Transaction
 
 
 class ItemAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'price', 'quantity', 'units')
+    list_display = ('id', 'name', 'price', 'quantity')
 
 
 class OrderAdmin(admin.ModelAdmin):
