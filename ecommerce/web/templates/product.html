@@ -1,12 +1,14 @@
 {% extends "include/base.html" %}
-{% load static %}
+{% load static rs_filter %}
 {% block content %}
 <div class="hero-wrap hero-bread">
 	<div class="container">
 		<div class="row no-gutters slider-text align-items-center justify-content-center">
 			<div class="col-md-9 ftco-animate text-center">
-				<p class="breadcrumbs"><span class="mr-2"><a href="{% url 'home' %}">Home / </a></span> <span
-						class="mr-2"><a href="{% url 'home' %}">Product</a></span> <span> / Product Single</span></p>
+				<p class="breadcrumbs">
+					<span class="mr-2"><a href="{% url 'home' %}">Home / </a></span>
+					<span class="mr-2"><a href="#">Product</a></span>
+				</p>
 			</div>
 		</div>
 	</div>
@@ -17,31 +19,15 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-6 mb-5 ftco-animate">
-				<a href="#" class="image-popup"><img src="{% static 'images/product-1.jpg' %}" class="img-fluid"
-						alt="Colorlib Template"></a>
+				<a href="#" class="image-popup">
+					<img src="{% static product.image.get_url %}" class="img-fluid" alt="{{ product.name }}">
+				</a>
 			</div>
 			<div class="col-lg-6 product-details pl-md-5 ftco-animate">
-				<h3>Bell Pepper</h3>
-				<p class="price"><span>$120.00</span></p>
-				<p>A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a
-					paradisematic country, in which roasted parts of sentences fly into your mouth. Text should turn
-					around and return to its own, safe country. But nothing the copy said could convince her and so it
-					didn’t take long until.
-				</p>
+				<h3>{{ product.name }}</h3>
+				<p class="price"><span>{{ product.price|rs }}</span></p>
+				<p>{{ product.description }}</p>
 				<div class="row mt-4">
-					<div class="col-md-6">
-						<div class="form-group d-flex">
-							<div class="select-wrap">
-								<div class="icon"><span class="ion-ios-arrow-down"></span></div>
-								<select name="" id="" class="form-control">
-									<option value="">Small</option>
-									<option value="">Medium</option>
-									<option value="">Large</option>
-									<option value="">Extra Large</option>
-								</select>
-							</div>
-						</div>
-					</div>
 					<div class="w-100"></div>
 					<div class="input-group col-md-6 d-flex mb-3">
 						<span class="input-group-btn mr-2">
@@ -59,7 +45,11 @@
 					</div>
 					<div class="w-100"></div>
 					<div class="col-md-12">
-						<p style="color: #000;">600 kg available</p>
+							{% if product.quantity > 0 %}
+								<p style="color: #000;">{{ product.quantity }} {{ product.units }} Available</p>
+							{% else %}
+								<p style="color: #f00;">Out of Stock</p>
+							{% endif %}
 					</div>
 				</div>
 				<p><a href="{% url 'cart' %}" class="btn btn-black py-3 px-5">Add to Cart</a></p>
