@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.contrib.auth import logout
+from django.shortcuts import render, redirect
 from store.models import Product
 
 
@@ -27,3 +28,16 @@ def product(request, pk):
     product = Product.objects.get(id=pk)
     all_products = Product.objects.all().exclude(id=pk)
     return render(request, 'product.html', {'product': product, 'all_products': all_products})
+
+
+def logout_user(request):
+    logout(request)
+    redirect_url = '/login/'
+    response = redirect(redirect_url)
+
+    if not request.user.is_authenticated:
+        for cookie in request.COOKIES:
+            response.delete_cookie(cookie)
+        request.session.flush()
+
+    return response
