@@ -30,6 +30,10 @@ def product(request, pk):
     return render(request, 'product.html', {'product': product, 'all_products': all_products})
 
 
+def profile(request):
+    return render(request, 'account/profile.html')
+
+
 def logout_user(request):
     logout(request)
     redirect_url = '/login/'
