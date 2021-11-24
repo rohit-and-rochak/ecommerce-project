@@ -1,5 +1,7 @@
 from django.contrib.auth import logout
 from django.shortcuts import render, redirect
+
+from base.constants import STATE_CHOICES
 from store.models import Product
 
 
@@ -31,7 +33,7 @@ def product(request, pk):
 
 
 def profile(request):
-    return render(request, 'account/profile.html')
+    return render(request, 'account/profile.html', {'states': STATE_CHOICES})
 
 
 def logout_user(request):

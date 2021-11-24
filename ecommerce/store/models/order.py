@@ -2,9 +2,7 @@ from decimal import Decimal
 
 from django.db import models
 
-from address.models import Address
-
-from base.models import BaseModel, User
+from base.models import BaseModel, User, Address
 from .item import Item
 
 
@@ -19,7 +17,7 @@ class Order(BaseModel):
         CANCELLED = 'CANCELLED' # noqa E221
         COMPLETED = 'COMPLETED' # noqa E221
 
-    address   = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True)                                                        # noqa E221
+    address   = models.ForeignKey(Address, on_delete=models.DO_NOTHING, null=True)                                                        # noqa E221
     delievery = models.CharField(max_length=20, choices=Delievery.choices, default=Delievery.HOME_DELIEVERY, null=False, blank=True)    # noqa E221
     discount  = models.PositiveSmallIntegerField(default=0, null=False, blank=True)                                                     # noqa E221
     items     = models.ManyToManyField(Item)                                                                                            # noqa E221
