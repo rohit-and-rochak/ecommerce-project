@@ -10013,6 +10013,6 @@ textarea.form-control {
     stroke-dashoffset: -136px; } }
 
 
-a.dropdown-item:hover{
+a.dropdown-item:hover, .nav-item:hover{
   background-color: #ededed !important;
 }

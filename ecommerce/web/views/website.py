@@ -27,9 +27,9 @@ def checkout(request):
 
 
 def product(request, pk):
-    product = Product.objects.get(id=pk)
-    all_products = Product.objects.all().exclude(id=pk)
-    return render(request, 'product.html', {'product': product, 'all_products': all_products})
+    item = Product.objects.get(id=pk)
+    products = Product.objects.all().exclude(id=pk)
+    return render(request, 'product.html', {'item': item, 'products': products})
 
 
 def profile(request):

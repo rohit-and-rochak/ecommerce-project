@@ -20,13 +20,13 @@
 		<div class="row">
 			<div class="col-lg-6 mb-5 ftco-animate">
 				<a href="#" class="image-popup">
-					<img src="{% static product.image.get_url %}" class="img-fluid" alt="{{ product.name }}">
+					<img src="{% static item.image.get_url %}" class="img-fluid" alt="{{ item.name }}">
 				</a>
 			</div>
 			<div class="col-lg-6 product-details pl-md-5 ftco-animate">
-				<h3>{{ product.name }}</h3>
-				<p class="price"><span>{{ product.price|rs }}</span></p>
-				<p>{{ product.description }}</p>
+				<h3>{{ item.name }}</h3>
+				<p class="price"><span>{{ item.price|rs }}</span></p>
+				<p>{{ item.description }}</p>
 				<div class="row mt-4">
 					<div class="w-100"></div>
 					<div class="input-group col-md-6 d-flex mb-3">
@@ -45,8 +45,8 @@
 					</div>
 					<div class="w-100"></div>
 					<div class="col-md-12">
-							{% if product.quantity > 0 %}
-								<p style="color: #000;">{{ product.quantity }} {{ product.units }} Available</p>
+							{% if item.quantity > 0 %}
+								<p style="color: #000;">{{ item.quantity }} {{ item.units }} Available</p>
 							{% else %}
 								<p style="color: #f00;">Out of Stock</p>
 							{% endif %}
@@ -70,19 +70,27 @@
 	</div>
 	<div class="container">
 		<div class="row">
+			{% for product in products %}
 			<div class="col-md-6 col-lg-3 ftco-animate">
 				<div class="product">
-					<a href="#" class="img-prod"><img class="img-fluid" src="{% static 'images/product-1.jpg' %}"
-							alt="Colorlib Template">
-						<span class="status">30%</span>
+					<a href="{% url 'product' product.id %}" class="img-prod"><img class="img-fluid" src="{% static product.image.get_url %}" alt="{{ product.name }}">
+						{% if product.discount > 0 %}
+						<span class="status">{{ product.discount }}%</span>
+						{% endif %}
 						<div class="overlay"></div>
 					</a>
 					<div class="text py-3 pb-4 px-3 text-center">
-						<h3><a href="#">Bell Pepper</a></h3>
+						<h3><a href="#">{{ product.name }}</a></h3>
 						<div class="d-flex">
 							<div class="pricing">
-								<p class="price"><span class="mr-2 price-dc">$120.00</span><span
-										class="price-sale">$80.00</span></p>
+								<p class="price">
+                                    {% if product.discount == 0 %}
+                                        <span>{{ product.price|rs }}</span>
+                                    {% else %}
+                                        <span class="mr-2 price-dc">{{ product.price|rs }}</span>
+                                        <span class="price-sale">{{ product.discounted_price|rs }}</span>
+                                    {% endif %}
+								</p>
 							</div>
 						</div>
 						<div class="bottom-area d-flex px-3">
@@ -102,96 +110,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-md-6 col-lg-3 ftco-animate">
-				<div class="product">
-					<a href="#" class="img-prod"><img class="img-fluid" src="{% static 'images/product-2.jpg' %}"
-							alt="Colorlib Template">
-						<div class="overlay"></div>
-					</a>
-					<div class="text py-3 pb-4 px-3 text-center">
-						<h3><a href="#">Strawberry</a></h3>
-						<div class="d-flex">
-							<div class="pricing">
-								<p class="price"><span>$120.00</span></p>
-							</div>
-						</div>
-						<div class="bottom-area d-flex px-3">
-							<div class="m-auto d-flex">
-								<a href="#"
-									class="add-to-cart d-flex justify-content-center align-items-center text-center">
-									<span><i class="ion-ios-menu"></i></span>
-								</a>
-								<a href="#" class="buy-now d-flex justify-content-center align-items-center mx-1">
-									<span><i class="ion-ios-cart"></i></span>
-								</a>
-								<a href="#" class="heart d-flex justify-content-center align-items-center ">
-									<span><i class="ion-ios-heart"></i></span>
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-6 col-lg-3 ftco-animate">
-				<div class="product">
-					<a href="#" class="img-prod"><img class="img-fluid" src="{% static 'images/product-3.jpg' %}"
-							alt="Colorlib Template">
-						<div class="overlay"></div>
-					</a>
-					<div class="text py-3 pb-4 px-3 text-center">
-						<h3><a href="#">Green Beans</a></h3>
-						<div class="d-flex">
-							<div class="pricing">
-								<p class="price"><span>$120.00</span></p>
-							</div>
-						</div>
-						<div class="bottom-area d-flex px-3">
-							<div class="m-auto d-flex">
-								<a href="#"
-									class="add-to-cart d-flex justify-content-center align-items-center text-center">
-									<span><i class="ion-ios-menu"></i></span>
-								</a>
-								<a href="#" class="buy-now d-flex justify-content-center align-items-center mx-1">
-									<span><i class="ion-ios-cart"></i></span>
-								</a>
-								<a href="#" class="heart d-flex justify-content-center align-items-center ">
-									<span><i class="ion-ios-heart"></i></span>
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-6 col-lg-3 ftco-animate">
-				<div class="product">
-					<a href="#" class="img-prod"><img class="img-fluid" src="{% static 'images/product-4.jpg' %}"
-							alt="Colorlib Template">
-						<div class="overlay"></div>
-					</a>
-					<div class="text py-3 pb-4 px-3 text-center">
-						<h3><a href="#">Purple Cabbage</a></h3>
-						<div class="d-flex">
-							<div class="pricing">
-								<p class="price"><span>$120.00</span></p>
-							</div>
-						</div>
-						<div class="bottom-area d-flex px-3">
-							<div class="m-auto d-flex">
-								<a href="#"
-									class="add-to-cart d-flex justify-content-center align-items-center text-center">
-									<span><i class="ion-ios-menu"></i></span>
-								</a>
-								<a href="#" class="buy-now d-flex justify-content-center align-items-center mx-1">
-									<span><i class="ion-ios-cart"></i></span>
-								</a>
-								<a href="#" class="heart d-flex justify-content-center align-items-center ">
-									<span><i class="ion-ios-heart"></i></span>
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+			{% endfor %}
 		</div>
 	</div>
 </section>
