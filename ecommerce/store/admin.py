@@ -8,7 +8,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'delievery', 'status')
+    list_display = ('id', 'delievery', 'status')
 
 
 admin.site.register(Image)
