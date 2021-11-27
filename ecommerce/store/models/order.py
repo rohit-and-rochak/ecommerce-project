@@ -2,8 +2,8 @@ from decimal import Decimal
 
 from django.db import models
 
-from base.models import BaseModel, User, Address
-from .item import Item
+from base.models import BaseModel, Address
+from .cart import Cart
 
 
 class Order(BaseModel):
@@ -20,9 +20,8 @@ class Order(BaseModel):
     address   = models.ForeignKey(Address, on_delete=models.DO_NOTHING, null=True)                                                        # noqa E221
     delievery = models.CharField(max_length=20, choices=Delievery.choices, default=Delievery.HOME_DELIEVERY, null=False, blank=True)    # noqa E221
     discount  = models.PositiveSmallIntegerField(default=0, null=False, blank=True)                                                     # noqa E221
-    items     = models.ManyToManyField(Item)                                                                                            # noqa E221
+    cart      = models.OneToOneField(Cart, on_delete=models.CASCADE)                                                                                            # noqa E221
     status    = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING, null=False, blank=True)                 # noqa E221
-    user      = models.ForeignKey(User, on_delete=models.CASCADE)                                                                       # noqa E221
 
     def __str__(self):
         return f"{self.delievery.lower()} order for {self.user}"

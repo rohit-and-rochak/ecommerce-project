@@ -1,6 +1,5 @@
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-
 from django.shortcuts import render, redirect
 
 from base.constants import STATE_CHOICES
@@ -21,18 +20,13 @@ def about(request):
 
 
 @login_required
-def cart(request):
-    return render(request, 'cart.html')
-
-
-@login_required
 def checkout(request):
     return render(request, 'checkout.html')
 
 
-def product(request, pk):
-    item = Product.objects.get(id=pk)
-    products = Product.objects.all().exclude(id=pk)
+def product(request, product_id):
+    item = Product.objects.get(id=product_id)
+    products = Product.objects.all().exclude(id=product_id)
     return render(request, 'product.html', {'item': item, 'products': products})
 
 
