@@ -1,15 +1,17 @@
 from django.urls import path
 
-from .views import website
+from .views import website, cart
 
 urlpatterns = [
     path('', website.home, name='home'),
     path('shop/', website.shop, name='shop'),
     path('about/', website.about, name='about'),
-    path('cart/', website.cart, name='cart'),
     path('checkout/', website.checkout, name='checkout'),
-    path('product/<uuid:pk>/', website.product, name='product'),
+    path('product/<uuid:product_id>/', website.product, name='product'),
     path('logout/', website.logout_user, name="logout"),
     path('profile/', website.profile, name="profile"),
 
+    path('cart/', cart.cart, name='cart'),
+    path('add_to_cart/', cart.add_to_cart, name="add-to-cart"),
+    path('remove_from_cart/', cart.add_to_cart, name="remove-from-cart"),
 ]

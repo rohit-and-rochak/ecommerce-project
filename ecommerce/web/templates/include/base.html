@@ -37,6 +37,14 @@
 
   {% include "include/header.html" %}
   <!-- END nav -->
+  <div class="container mt-2">
+    <div id="message" class="alert alert-success alert-dismissible d-none" role="alert">
+      <span id="message-text">Hi</span>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
   {% block content %}{% endblock %}
 
   {% include "include/footer.html" %}
@@ -48,8 +56,6 @@
     </svg></div>
 
 
-  <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
   <script src="{% static 'js/jquery.min.js'%}"></script>
   <script src="{% static 'js/jquery-migrate-3.0.1.min.js'%}"></script>
   <script src="{% static 'js/popper.min.js'%}"></script>
@@ -63,8 +69,33 @@
   <script src="{% static 'js/jquery.animateNumber.min.js'%}"></script>
   <script src="{% static 'js/bootstrap-datepicker.js'%}"></script>
   <script src="{% static 'js/scrollax.min.js'%}"></script>
-  <script src="{% static 'js/google-map.js'%}"></script>
   <script src="{% static 'js/main.js'%}"></script>
+  <script src="{% static 'js/base.js'%}"></script>
+  <script>
+    $(document).ready(function () {
+      $('.quantity-right-plus').click(function (e) {
+        e.preventDefault();
+        let quantity = parseInt($('#quantity').val());
+        $('#quantity').val(quantity + 1);
+      });
+      $('.quantity-left-minus').click(function (e) {
+        e.preventDefault();
+        let quantity = parseInt($('#quantity').val());
+        if (quantity > 0) {
+          $('#quantity').val(quantity - 1);
+        }
+      });
+    });
+
+    function show_success_message(message){
+        $('#message').removeClass('alert-danger d-none').addClass('alert-success')
+        $('#message-text').html(message);
+    }
+    function show_error_message(message){
+        $('#message').removeClass('alert-success d-none').addClass('alert-danger')
+        $('#message-text').html(message);
+    }
+  </script>
   {% block custom_js %}{% endblock %}
 </body>
 
