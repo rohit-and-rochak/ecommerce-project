@@ -18,14 +18,20 @@
 <section class="ftco-section">
 	<div class="container">
 		<div class="row">
-			<div class="col-lg-6 mb-5 ftco-animate">
-				<a href="#" class="image-popup">
+			<div class="col-lg-6 mb-5 ftco-animate product">
+				<a href="#" class="image-popup img-prod">
 					<img src="{% static item.image.get_url %}" class="img-fluid" alt="{{ item.name }}">
+					{% if item.discount > 0%}
+						<span class="status-2x">{{ item.discount }}%</span>
+					{% endif %}
 				</a>
 			</div>
 			<div class="col-lg-6 product-details pl-md-5 ftco-animate">
 				<h3>{{ item.name }}</h3>
-				<p class="price"><span>{{ item.price|rs }}</span></p>
+				<p class="price">
+					<span class="price-dc">{{ item.price|rs }}</span>
+					<span>{{ item.discounted_price|rs }}</span>
+				</p>
 				<p>{{ item.description }}</p>
 				<div class="row mt-4">
 					<div class="w-100"></div>
@@ -114,22 +120,4 @@
 		</div>
 	</div>
 </section>
-{% block custom_js %}
-<script>
-	$(document).ready(function () {
-		$('.quantity-right-plus').click(function (e) {
-			e.preventDefault();
-			let quantity = parseInt($('#quantity').val());
-			$('#quantity').val(quantity + 1);
-		});
-		$('.quantity-left-minus').click(function (e) {
-			e.preventDefault();
-			let quantity = parseInt($('#quantity').val());
-			if (quantity > 0) {
-				$('#quantity').val(quantity - 1);
-			}
-		});
-	});
-</script>
-{% endblock %}
 {% endblock %}
