@@ -1,5 +1,5 @@
 {% extends "include/base.html" %}
-{% load static %}
+{% load static rs_filter %}
 {% block content %}
 <div class="hero-wrap hero-bread">
 	<div class="container">
@@ -21,218 +21,86 @@
 		<div class="row justify-content-center">
 			<div class="col-md-10 mb-5 text-center">
 				<ul class="product-category">
-					<li><a href="#" class="active">All</a></li>
-					<li><a href="#">Vegetables</a></li>
-					<li><a href="#">Fruits</a></li>
-					<li><a href="#">Juice</a></li>
-					<li><a href="#">Dried</a></li>
+					{% for category,_ in products.items %}
+						<li class="product-category-item">
+							{% if forloop.first %}
+								<a href="{{ category|lower }}" class="active" onclick="return false;">
+							{% else %}
+								<a href="{{ category|lower }}" onclick="return false;">
+							{% endif %}
+								{{ category }}
+							</a>
+						</li>
+					{% endfor %}
 				</ul>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-md-6 col-lg-3 ftco-animate">
-				<div class="product">
-					<a href="#" class="img-prod"><img class="img-fluid" src="{% static 'images/product-7.jpg' %}"
-							alt="Colorlib Template">
-						<div class="overlay"></div>
-					</a>
-					<div class="text py-3 pb-4 px-3 text-center">
-						<h3><a href="#">Carrots</a></h3>
-						<div class="d-flex">
-							<div class="pricing">
-								<p class="price"><span>$120.00</span></p>
+		{% for category, items in products.items %}
+		{% if forloop.first %}
+			<div class="row product-row" id="{{ category|lower }}">
+		{% else %}
+			<div class="row product-row d-none" id="{{ category|lower }}">
+		{% endif %}
+			{% for product in items %}
+				<div class="col-md-6 col-lg-3 ftco-animate">
+					<div class="product">
+						<a href="{% url 'product' product.id %}" class="img-prod">
+							<img class="img-fluid" src="{% static product.image.get_url %}" alt="{{ product.name }}">
+							{% if product.discount > 0 %}
+								<span class="status">{{ product.discount }}%</span>
+							{% endif %}
+							<div class="overlay"></div>
+						</a>
+						<div class="text py-3 pb-4 px-3 text-center">
+							<h3><a href="#">{{ product.name }}</a></h3>
+							<div class="d-flex">
+								<div class="pricing">
+									<p class="price">
+										{% if product.discount == 0 %}
+											<span>{{ product.price|rs }}</span>
+										{% else %}
+											<span class="mr-2 price-dc">{{ product.price|rs }}</span>
+											<span class="price-sale">{{ product.discounted_price|rs }}</span>
+										{% endif %}
+									</p>
+								</div>
 							</div>
-						</div>
-						<div class="bottom-area d-flex px-3">
-							<div class="m-auto d-flex">
-
-								<a href="#" class="buy-now d-flex justify-content-center align-items-center mx-1">
-									<span><i class="ion-ios-cart"></i></span>
-								</a>
-
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-6 col-lg-3 ftco-animate">
-				<div class="product">
-					<a href="#" class="img-prod"><img class="img-fluid" src="{% static 'images/product-7.jpg' %}"
-							alt="Colorlib Template">
-						<div class="overlay"></div>
-					</a>
-					<div class="text py-3 pb-4 px-3 text-center">
-						<h3><a href="#">Carrots</a></h3>
-						<div class="d-flex">
-							<div class="pricing">
-								<p class="price"><span>$120.00</span></p>
-							</div>
-						</div>
-						<div class="bottom-area d-flex px-3">
-							<div class="m-auto d-flex">
-
-								<a href="#" class="buy-now d-flex justify-content-center align-items-center mx-1">
-									<span><i class="ion-ios-cart"></i></span>
-								</a>
-
+							<div class="bottom-area d-flex px-3">
+								<div class="m-auto d-flex">
+									<a href="{% url 'product' product.id %}" class="buy-now d-flex justify-content-center align-items-center mx-1">
+										<span><i class="ion-ios-cart"></i></span>
+									</a>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-			<div class="col-md-6 col-lg-3 ftco-animate">
-				<div class="product">
-					<a href="#" class="img-prod"><img class="img-fluid" src="{% static 'images/product-7.jpg' %}"
-							alt="Colorlib Template">
-						<div class="overlay"></div>
-					</a>
-					<div class="text py-3 pb-4 px-3 text-center">
-						<h3><a href="#">Carrots</a></h3>
-						<div class="d-flex">
-							<div class="pricing">
-								<p class="price"><span>$120.00</span></p>
-							</div>
-						</div>
-						<div class="bottom-area d-flex px-3">
-							<div class="m-auto d-flex">
-
-								<a href="#" class="buy-now d-flex justify-content-center align-items-center mx-1">
-									<span><i class="ion-ios-cart"></i></span>
-								</a>
-
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-6 col-lg-3 ftco-animate">
-				<div class="product">
-					<a href="#" class="img-prod"><img class="img-fluid" src="{% static 'images/product-7.jpg' %}"
-							alt="Colorlib Template">
-						<div class="overlay"></div>
-					</a>
-					<div class="text py-3 pb-4 px-3 text-center">
-						<h3><a href="#">Carrots</a></h3>
-						<div class="d-flex">
-							<div class="pricing">
-								<p class="price"><span>$120.00</span></p>
-							</div>
-						</div>
-						<div class="bottom-area d-flex px-3">
-							<div class="m-auto d-flex">
-
-								<a href="#" class="buy-now d-flex justify-content-center align-items-center mx-1">
-									<span><i class="ion-ios-cart"></i></span>
-								</a>
-
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-6 col-lg-3 ftco-animate">
-				<div class="product">
-					<a href="#" class="img-prod"><img class="img-fluid" src="{% static 'images/product-7.jpg' %}"
-							alt="Colorlib Template">
-						<div class="overlay"></div>
-					</a>
-					<div class="text py-3 pb-4 px-3 text-center">
-						<h3><a href="#">Carrots</a></h3>
-						<div class="d-flex">
-							<div class="pricing">
-								<p class="price"><span>$120.00</span></p>
-							</div>
-						</div>
-						<div class="bottom-area d-flex px-3">
-							<div class="m-auto d-flex">
-
-								<a href="#" class="buy-now d-flex justify-content-center align-items-center mx-1">
-									<span><i class="ion-ios-cart"></i></span>
-								</a>
-
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-6 col-lg-3 ftco-animate">
-				<div class="product">
-					<a href="#" class="img-prod"><img class="img-fluid" src="{% static 'images/product-7.jpg' %}"
-							alt="Colorlib Template">
-						<div class="overlay"></div>
-					</a>
-					<div class="text py-3 pb-4 px-3 text-center">
-						<h3><a href="#">Carrots</a></h3>
-						<div class="d-flex">
-							<div class="pricing">
-								<p class="price"><span>$120.00</span></p>
-							</div>
-						</div>
-						<div class="bottom-area d-flex px-3">
-							<div class="m-auto d-flex">
-
-								<a href="#" class="buy-now d-flex justify-content-center align-items-center mx-1">
-									<span><i class="ion-ios-cart"></i></span>
-								</a>
-
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-6 col-lg-3 ftco-animate">
-				<div class="product">
-					<a href="#" class="img-prod"><img class="img-fluid" src="{% static 'images/product-7.jpg' %}"
-							alt="Colorlib Template">
-						<div class="overlay"></div>
-					</a>
-					<div class="text py-3 pb-4 px-3 text-center">
-						<h3><a href="#">Carrots</a></h3>
-						<div class="d-flex">
-							<div class="pricing">
-								<p class="price"><span>$120.00</span></p>
-							</div>
-						</div>
-						<div class="bottom-area d-flex px-3">
-							<div class="m-auto d-flex">
-
-								<a href="#" class="buy-now d-flex justify-content-center align-items-center mx-1">
-									<span><i class="ion-ios-cart"></i></span>
-								</a>
-
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-6 col-lg-3 ftco-animate">
-				<div class="product">
-					<a href="#" class="img-prod"><img class="img-fluid" src="{% static 'images/product-7.jpg' %}"
-							alt="Colorlib Template">
-						<div class="overlay"></div>
-					</a>
-					<div class="text py-3 pb-4 px-3 text-center">
-						<h3><a href="#">Carrots</a></h3>
-						<div class="d-flex">
-							<div class="pricing">
-								<p class="price"><span>$120.00</span></p>
-							</div>
-						</div>
-						<div class="bottom-area d-flex px-3">
-							<div class="m-auto d-flex">
-
-								<a href="#" class="buy-now d-flex justify-content-center align-items-center mx-1">
-									<span><i class="ion-ios-cart"></i></span>
-								</a>
-
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+			{% endfor %}
 		</div>
+		{% endfor %}
 
 	</div>
 </section>
 
+{% endblock %}
+{% block custom_js %}
+<script>
+	$('ul').click(function(event){
+		$('.product-category-item .active').removeClass('active')
+
+		const target = event.target;
+		console.log(target);
+		$(target).addClass('active');
+		const href = $(target).attr('href');
+		$('.product-row').each(function(){
+			if($(this).attr('id') == href){
+				$(this).removeClass('d-none');
+			}
+			else{
+				$(this).addClass('d-none');
+			}
+		});
+
+	});
+</script>
 {% endblock %}

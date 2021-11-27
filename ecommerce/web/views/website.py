@@ -7,12 +7,18 @@ from store.models import Product
 
 
 def home(request):
-    products = Product.objects.all()
+    products = Product.objects.filter(featured=True)
     return render(request, 'home.html', {'products': products})
 
 
 def shop(request):
-    return render(request, 'shop.html')
+    all_products = Product.objects.all()
+    categories = [choice[0] for choice in Product.Category.choices]
+    products = {}
+    for category in categories:
+        products[category] = list(all_products.filter(category=category))
+
+    return render(request, 'shop.html', {'products': products})
 
 
 def about(request):
