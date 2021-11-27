@@ -32,7 +32,7 @@
 							<tbody>
 								{% for item in cart_items %}
 								<tr class="text-center">
-									<td class="product-remove"><a href="#"><span class="ion-ios-close"></span></a></td>
+									<td class="product-remove" data-product-id="{{ item.product.id }}"><a href="#"><span class="ion-ios-close"></span></a></td>
 									<td class="image-prod">
 										<div class="img" style="background-image:url({% static item.product.image.get_url %});"></div>
 									</td>
@@ -122,4 +122,24 @@
 		{% endif %}
 		</div>
 </section>
+{% endblock %}
+{% block custom_js %}
+<script>
+	$(document).ready(function(){
+		$('.product-remove').click(function(e){
+			e.preventDefault();
+			let product_id = $(this).attr('data-product-id');
+			let data = {'product_id': product_id};
+			let token = '{{ csrf_token }}';
+			ajax_request('POST', '{% url "remove-from-cart" %}', data, token).done(function(res){
+				alert('Removed Item Successfully');
+				location.reload();
+			}).fail(function(data){
+				$('body').scrollTop(0);
+				show_error_message(data['error']);
+			});
+
+		});
+	});
+</script>
 {% endblock %}

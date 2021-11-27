@@ -41,16 +41,17 @@ def add_to_cart(request):
 @login_required
 def remove_from_cart(request):
     if request.is_ajax:
-        try:
-            cart, _ = Cart.objects.get_or_create(user=request.user)
-            data = request.POST
-            product_id = data.get('product_id')
-            quantity = int(data.get('quantity'))
-            cart.remove_item(product_id, quantity)
-            return JsonResponse({'data': None})
-        except Exception as e:
-            print(e)
-            return JsonResponse({'error': 'could not add item to cart'}, status=500)
+        cart = Cart.objects.get(user=request.user)
+        data = request.POST
+        product_id = data.get('product_id')
+        item = cart.items.all().filter(product_id=product_id)
+        quantity = data.get('quantity')
+        if quantity:
+            quantity = int(quantity)
+        else:
+            quantity = item.quantity
 
+        cart.remove_item(product_id, quantity)
+        return JsonResponse({'data': None})
     else:
         return JsonResponse({'error': 'invalid request'}, status=500)
