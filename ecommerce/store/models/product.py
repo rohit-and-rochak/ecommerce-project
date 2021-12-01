@@ -9,8 +9,9 @@ from .image import Image
 class Product(BaseModel):
     class Category(models.TextChoices):
         DAIRY = 'DAIRY'
-        FRUITS = 'FRUITS'
-        ESSENTIALS = 'ESSENTIALS'
+        BREADS = 'BREADS'
+        OILS = 'OILS'
+        CREAMS = 'CREAMS'
 
     class Unit(models.TextChoices):
         Kg = 'Kg'
@@ -19,7 +20,7 @@ class Product(BaseModel):
         L = 'L'
 
     name        = models.CharField(max_length=100)                                                                              # noqa E221
-    category    = models.CharField(max_length=20, choices=Category.choices, default=Category.ESSENTIALS, null=False, blank=True)   # noqa E221
+    category    = models.CharField(max_length=20, choices=Category.choices, default=Category.DAIRY, null=False, blank=True)   # noqa E221
     description = models.TextField(max_length=500, blank=True, null=True)                                                       # noqa E221
     discount    = models.PositiveSmallIntegerField(default=0, null=False, blank=True)                                           # noqa E221
     price       = models.DecimalField(max_digits=10, decimal_places=2)                                                          # noqa E221
