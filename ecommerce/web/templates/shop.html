@@ -85,7 +85,7 @@
 {% endblock %}
 {% block custom_js %}
 <script>
-	$('ul').on('click', function(event){
+	$('ul').off().on('click', function(event){
 		$('.product-category-item .active').removeClass('active')
 
 		const target = event.target;

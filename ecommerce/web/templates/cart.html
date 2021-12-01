@@ -125,7 +125,7 @@
 {% endblock %}
 {% block custom_js %}
 <script>
-	$('.product-remove').on('click', function(e){
+	$('.product-remove').off().on('click', function(e){
 		e.preventDefault();
 		const product_id = $(this).attr('data-product-id');
 		let data = {'product_id': product_id};

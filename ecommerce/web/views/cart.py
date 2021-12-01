@@ -51,6 +51,6 @@ def remove_from_cart(request):
                 quantity = item.quantity
 
             cart.remove_item(product_id, quantity)
-            return JsonResponse({'data': None, 'error': 'No Error'}, status=500)
+            return JsonResponse({'data': None}, status=200)
 
     return JsonResponse({'error': 'invalid request'}, status=500)

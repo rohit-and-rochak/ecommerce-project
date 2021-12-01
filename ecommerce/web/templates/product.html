@@ -29,8 +29,12 @@
 			<div class="col-lg-6 product-details pl-md-5 ftco-animate">
 				<h3>{{ item.name }}</h3>
 				<p class="price">
-					<span class="price-dc">{{ item.price|rs }}</span>
-					<span>{{ item.discounted_price|rs }}</span>
+					{% if item.discount > 0 %}
+						<span class="price-dc">{{ item.price|rs }}</span>
+						<span>{{ item.discounted_price|rs }}</span>
+					{% else %}
+						<span>{{ item.price|rs }}</span>
+					{% endif %}
 				</p>
 				<p>{{ item.description }}</p>
 				<div class="row mt-4">
@@ -58,7 +62,7 @@
 							{% endif %}
 					</div>
 				</div>
-				<p><a href="#" class="btn btn-black py-3 px-5"><span id="add-to-cart">Add to Cart</span></a></p>
+				<p id="add-to-cart"><a href="#" class="btn btn-black py-3 px-5"><span>Add to Cart</span></a></p>
 			</div>
 		</div>
 	</div>
@@ -81,7 +85,7 @@
 				<div class="product">
 					<a href="{% url 'product' product.id %}" class="img-prod"><img class="img-fluid" src="{% static product.image.get_url %}" alt="{{ product.name }}">
 						{% if product.discount > 0 %}
-						<span class="status">{{ product.discount }}%</span>
+							<span class="status">{{ product.discount }}%</span>
 						{% endif %}
 						<div class="overlay"></div>
 					</a>
@@ -90,11 +94,11 @@
 						<div class="d-flex">
 							<div class="pricing">
 								<p class="price">
-                                    {% if product.discount == 0 %}
-                                        <span>{{ product.price|rs }}</span>
-                                    {% else %}
-                                        <span class="mr-2 price-dc">{{ product.price|rs }}</span>
-                                        <span class="price-sale">{{ product.discounted_price|rs }}</span>
+                                    {% if product.discount > 0 %}
+										<span class="mr-2 price-dc">{{ product.price|rs }}</span>
+										<span class="price-sale">{{ product.discounted_price|rs }}</span>
+									{% else %}
+										<span>{{ product.price|rs }}</span>
                                     {% endif %}
 								</p>
 							</div>
@@ -116,19 +120,25 @@
 {% endblock %}
 {% block custom_js %}
 <script>
-	$('#add-to-cart').on('click', function(e){
+	$('#add-to-cart').off().on('click', function(e){
 		e.preventDefault()
 		const product_id = "{{ item.id }}";
 		const quantity = parseInt($('#quantity').val());
-		const token = "{{ csrf_token }}";
-		let data = {'product_id': product_id, 'quantity': quantity};
-		ajax_request('POST', '{% url "add-to-cart" %}', data, token).done(function(res){
-			alert('Added item successfully');
-		}).fail(function(data){
-			const response = data.responseJSON;
-			$('body').scrollTop(0);
-			show_error_message(response['error']);
-		});
+		if(quantity == 0){
+			alert('Quantity must be greater than 0');
+		}
+		else{
+			const token = "{{ csrf_token }}";
+			let data = {'product_id': product_id, 'quantity': quantity};
+			ajax_request('POST', '{% url "add-to-cart" %}', data, token).done(function(res){
+				alert('Added item successfully');
+				location.reload();
+			}).fail(function(data){
+				const response = data.responseJSON;
+				$('body').scrollTop(0);
+				show_error_message(response['error']);
+			});
+		}
 	});
 </script>
 {% endblock %}
