@@ -9,3 +9,7 @@ def cart_item_count(request):
             context['cart_count'] = len(cart.items.all())
 
     return context
+
+
+def global_context(request):
+    return {'free_delievery': 200}
