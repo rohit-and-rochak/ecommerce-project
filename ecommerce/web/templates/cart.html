@@ -43,7 +43,7 @@
 									<td class="price">{{ item.product.discounted_price|rs }}</td>
 									<td class="quantity">
 										<div class="input-group mb-3">
-											<input type="text" name="quantity" class="quantity form-control input-number" value="{{ item.quantity }}" min="1" max="100">
+											<input type="text" name="quantity" class="quantity form-control input-number" data-product-id="{{ item.product.id }}" value="{{ item.quantity }}" min="1" max="100">
 										</div>
 									</td>
 									<td class="total">{{ item.price }}</td>
@@ -125,20 +125,18 @@
 {% endblock %}
 {% block custom_js %}
 <script>
-	$(document).ready(function(){
-		$('.product-remove').click(function(e){
-			e.preventDefault();
-			let product_id = $(this).attr('data-product-id');
-			let data = {'product_id': product_id};
-			let token = '{{ csrf_token }}';
-			ajax_request('POST', '{% url "remove-from-cart" %}', data, token).done(function(res){
-				alert('Removed Item Successfully');
-				location.reload();
-			}).fail(function(data){
-				$('body').scrollTop(0);
-				show_error_message(data['error']);
-			});
-
+	$('.product-remove').on('click', function(e){
+		e.preventDefault();
+		const product_id = $(this).attr('data-product-id');
+		let data = {'product_id': product_id};
+		const token = '{{ csrf_token }}';
+		ajax_request('POST', '{% url "remove-from-cart" %}', data, token).done(function(res){
+			alert('Removed Item Successfully');
+			location.reload();
+		}).fail(function(data){
+			const response = data.responseJSON;
+			$('body').scrollTop(0);
+			show_error_message(response['error']);
 		});
 	});
 </script>

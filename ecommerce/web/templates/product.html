@@ -116,19 +116,18 @@
 {% endblock %}
 {% block custom_js %}
 <script>
-	$(document).ready(function(){
-		$('#add-to-cart').click(function(e){
-			e.preventDefault()
-			let product_id = "{{ item.id }}";
-			let quantity = parseInt($('#quantity').val());
-			let token = "{{ csrf_token }}";
-			let data = {'product_id': product_id, 'quantity': quantity};
-			ajax_request('POST', '{% url "add-to-cart" %}', data, token).done(function(res){
-				alert('Added item successfully');
-			}).fail(function(data){
-				$('body').scrollTop(0);
-				show_error_message(data['error']);
-			});
+	$('#add-to-cart').on('click', function(e){
+		e.preventDefault()
+		const product_id = "{{ item.id }}";
+		const quantity = parseInt($('#quantity').val());
+		const token = "{{ csrf_token }}";
+		let data = {'product_id': product_id, 'quantity': quantity};
+		ajax_request('POST', '{% url "add-to-cart" %}', data, token).done(function(res){
+			alert('Added item successfully');
+		}).fail(function(data){
+			const response = data.responseJSON;
+			$('body').scrollTop(0);
+			show_error_message(response['error']);
 		});
 	});
 </script>
