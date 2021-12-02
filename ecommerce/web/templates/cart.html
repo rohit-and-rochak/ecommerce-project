@@ -38,12 +38,19 @@
 									</td>
 									<td class="product-name">
 										<h3>{{ item.product.name }}</h3>
-										<p>{{ item.product.description }}</p>
 									</td>
 									<td class="price">{{ item.product.discounted_price|rs }}</td>
 									<td class="quantity">
 										<div class="input-group mb-3">
-											<input type="text" name="quantity" class="quantity form-control input-number" data-product-id="{{ item.product.id }}" value="{{ item.quantity }}" min="1" max="100">
+											<select class="custom-select" id="quantity">
+												{% for i in item_count %}
+													{% if i == item.quantity  %}
+														<option value="{{ i }}" selected>{{ i }}</option>
+													{% else %}
+														<option value="{{ i }}">{{ i }}</option>
+													{% endif %}
+													{% endfor %}
+											</select>
 										</div>
 									</td>
 									<td class="total">{{ item.price }}</td>
@@ -139,5 +146,6 @@
 			show_error_message(response['error']);
 		});
 	});
+	$('')
 </script>
 {% endblock %}
