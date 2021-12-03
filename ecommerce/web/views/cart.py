@@ -33,8 +33,10 @@ def checkout(request):
 
 
 @require_POST
-@login_required
 def add_to_cart(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Login to add products'}, status=500)
+
     if request.is_ajax:
         try:
             cart, _ = Cart.objects.get_or_create(user=request.user)
@@ -50,8 +52,10 @@ def add_to_cart(request):
 
 
 @require_POST
-@login_required
 def remove_from_cart(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Login to add products'}, status=500)
+
     if request.is_ajax:
         cart = Cart.objects.get(user=request.user)
         data = request.POST
