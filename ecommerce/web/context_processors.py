@@ -12,4 +12,4 @@ def cart_item_count(request):
 
 
 def global_context(request):
-    return {'free_delievery': 200, 'item_count': [i for i in range(1, 6)]}
+    return {'free_delievery': 200, 'item_count': [i for i in range(1, 6)], 'delievery_fee': 30}

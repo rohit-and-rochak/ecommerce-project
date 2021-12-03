@@ -86,20 +86,20 @@
 							<h3 class="billing-heading mb-4">Cart Total</h3>
 							<p class="d-flex">
 								<span>Subtotal</span>
-								<span>$20.60</span>
+								<span id="sub-total" data-sub-total="{{ sub_total }}">{{ sub_total|rs }}</span>
 							</p>
 							<p class="d-flex">
 								<span>Delivery</span>
-								<span>$0.00</span>
+								<span id="delievery-charge"></span>
 							</p>
 							<p class="d-flex">
 								<span>Discount</span>
-								<span>$3.00</span>
+								<span id="discount" data-discount="{{ discount }}">{{ discount|rs }}</span>
 							</p>
 							<hr>
 							<p class="d-flex total-price">
 								<span>Total</span>
-								<span>$17.60</span>
+								<span id="total-amount"></span>
 							</p>
 						</div>
 					</div>
@@ -109,21 +109,21 @@
 							<div class="form-group">
 								<div class="col-md-12">
 									<div class="radio">
-										<label><input type="radio" name="optradio" class="mr-2"> UPI / Card</label>
+										<label><input type="radio" name="optradio" class="mr-2" disabled> UPI / Card</label>
 									</div>
 								</div>
 							</div>
 							<div class="form-group">
 								<div class="col-md-12">
 									<div class="radio">
-										<label><input type="radio" name="optradio" class="mr-2">Net Banking</label>
+										<label><input type="radio" name="optradio" class="mr-2" disabled>Net Banking</label>
 									</div>
 								</div>
 							</div>
 							<div class="form-group">
 								<div class="col-md-12">
 									<div class="radio">
-										<label><input type="radio" name="optradio" class="mr-2">Pay on Delivery</label>
+										<label><input type="radio" name="optradio" class="mr-2" checked>Pay on Delivery</label>
 									</div>
 								</div>
 							</div>
@@ -135,4 +135,39 @@
 		</div>
 	</div>
 </section> <!-- .section -->
+{% endblock %}
+{% block custom_js %}
+
+<script>
+	if(window.sessionStorage){
+		let delievery = JSON.parse(sessionStorage.getItem('delievery'));
+		const sub_total = parseFloat($('#sub-total').attr('data-sub-total'));
+		const discount = parseFloat($('#discount').attr('data-discount'));
+		const free_delievery_amount = parseFloat("{{ free_delievery }}");
+		const total = sub_total - discount;
+
+		if(delievery.mode == 'pickup')
+		{
+			$('#delievery-charge').html('Free');
+			$('#total-amount').attr('data-total', total);
+			$('#total-amount').html(`₹ ${total}`);
+		}
+		else if(delievery.mode == 'delievery')
+		{
+			const delievery_fee = parseFloat('{{ delievery_fee }}');
+			if(total < free_delievery_amount)
+			{
+				$('#delievery-charge').html(`₹ ${delievery_fee}`);
+				const final_amount = total + delievery_fee;
+				$('#total-amount').html(`₹ ${final_amount}`);
+			}
+			else
+			{
+				$('#delievery-charge').html(' Free');
+				$('#total-amount').attr('data-total', total);
+				$('#total-amount').html(`₹ ${total}`);
+			}
+		}
+	}
+</script>
 {% endblock %}

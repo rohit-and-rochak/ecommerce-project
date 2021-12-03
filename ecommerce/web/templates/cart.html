@@ -68,15 +68,13 @@
 						<p>Choose an option that suits you.</p>
 						<form action="#" class="info">
 							<div class="form-check">
-								<input class="form-check-input" type="radio" name="delieveryMode" id="pickupRadio"
-									value="pickup">
+								<input class="form-check-input" type="radio" name="delieveryMode" id="pickup">
 								<label class="form-check-label" for="pickup">
 									Pick-up from store
 								</label>
 							</div>
 							<div class="form-check">
-								<input class="form-check-input" type="radio" name="delieveryMode" id="delieveryRadio"
-									value="delievery">
+								<input class="form-check-input" type="radio" name="delieveryMode" id="delievery">
 								<label class="form-check-label" for="delievery">
 									Deliever to home
 								</label>
@@ -90,7 +88,7 @@
 						<h3>Cart Totals</h3>
 						<p class="d-flex">
 							<span>Subtotal</span>
-							<span>{{ sub_total|rs }}</span>
+							<span id="sub-total" data-sub-total="{{ sub_total }}">{{ sub_total|rs }}</span>
 						</p>
 						<p class="d-flex">
 							<span>Delivery</span>
@@ -98,7 +96,7 @@
 						</p>
 						<p class="d-flex">
 							<span>Discount</span>
-							<span id="discount">{{ discount|rs }}</span>
+							<span id="discount" data-discount="{{ discount }}">{{ discount|rs }}</span>
 						</p>
 						<hr>
 						<p class="d-flex total-price">
@@ -146,6 +144,38 @@
 			$('body').scrollTop(0);
 			show_error_message(response['error']);
 		});
-	})
+	});
+	$('input[name="delieveryMode"]').click(function()
+	{
+		const radio_id = $(this)[0].id;
+		const sub_total = parseFloat($('#sub-total').attr('data-sub-total'));
+		const discount = parseFloat($('#discount').attr('data-discount'));
+		const free_delievery_amount = parseFloat("{{ free_delievery }}");
+		const total = sub_total - discount;
+
+		sessionStorage.setItem('delievery', JSON.stringify({'mode': radio_id}));
+		if(radio_id == 'delievery')
+		{
+
+			const delievery_fee = parseFloat('{{ delievery_fee }}');
+			if(total < free_delievery_amount)
+			{
+				$('#delievery-charge').html(`₹ ${delievery_fee}`);
+				const final_amount = total + delievery_fee;
+				$('#total-amount').html(`₹ ${final_amount}`);
+			}
+			else
+			{
+				$('#delievery-charge').html(' Free');
+				$('#total-amount').attr('data-total', total);
+				$('#total-amount').html(`₹ ${total}`);
+			}
+		}
+		else if(radio_id == 'pickup'){
+			$('#delievery-charge').html(' Free');
+			$('#total-amount').attr('data-total', total);
+			$('#total-amount').html(`₹ ${total}`);
+		}
+	});
 </script>
 {% endblock %}
