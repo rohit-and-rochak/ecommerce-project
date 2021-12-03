@@ -9,6 +9,7 @@ urlpatterns = [
     path('product/<uuid:product_id>/', website.product, name='product'),
     path('logout/', website.logout_user, name="logout"),
     path('profile/', website.profile, name="profile"),
+    path('update_profile/', website.update_profile, name="update-profile"),
 
     path('cart/', cart.cart, name='cart'),
     path('checkout/', cart.checkout, name='checkout'),

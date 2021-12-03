@@ -4,8 +4,7 @@
 {% load account socialaccount %}
 
 {% block custom_css %}
-  <style>
-  </style>
+ 
 {% endblock %}
 
 {% block content %}
@@ -14,15 +13,17 @@
       <div class="section-title">
         <h2>Sign Up</h2>
       </div>
-      <div class="login-form">
+      <div class="login-form border p-4">
         <div class="col-lg-6" style="margin:auto">
           <form class="form-group" id="signup_form" method="post" action="{% url 'account_signup' %}">
             {% csrf_token %}
             {{ form.as_p }}
             {% if redirect_field_value %}
-            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+              <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
             {% endif %}
-            <button type="submit" class="btn btn-primary">Sign Up &raquo;</button>
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary">Sign Up &raquo;</button>
+            </div>
           </form>
         </div>
       </div>

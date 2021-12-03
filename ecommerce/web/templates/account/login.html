@@ -4,9 +4,9 @@
 {% load account socialaccount %}
 
 {% block custom_css %}
-	<style>
-	</style>
+  <link rel="stylesheet" href="{% static 'css/account.css'%}">
 {% endblock %}
+
 {% block content %}
 <section id="entity" class="ftco-section">
 	<div class="container">
@@ -28,8 +28,7 @@
 					</div>
 					<button type="submit" class="btn btn-primary">Login</button>
 				</form>
-				<p><br /><a class="button secondaryAction" href="{% url 'account_reset_password' %}">Forgot Password?</a></p>
-				<p><a href="/signup/">Not a registered user? Register now</a> </p>
+				<p><a href="/signup/">Not a registered user? Register now</a></p>
          	</div>
       	</div>
 	</div>

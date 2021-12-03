@@ -1,5 +1,7 @@
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 from django.shortcuts import render, redirect
 
 from base.constants import STATE_CHOICES
@@ -34,6 +36,21 @@ def product(request, product_id):
 @login_required
 def profile(request):
     return render(request, 'account/profile.html', {'states': STATE_CHOICES})
+
+
+@require_POST
+@login_required
+def update_profile(request):
+    if request.is_ajax:
+        user = request.user
+        data = request.POST
+        for key in data.keys():
+            setattr(user, key, data[key])
+
+        user.save()
+        return JsonResponse({'data': None}, status=200)
+
+    return JsonResponse({'error': 'There occurred an error'}, status=500)
 
 
 @login_required
