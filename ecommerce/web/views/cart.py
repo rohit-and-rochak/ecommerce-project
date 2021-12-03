@@ -28,13 +28,11 @@ def add_to_cart(request):
             product_id = data.get('product_id')
             quantity = int(data.get('quantity'))
             cart.add_item(product_id, quantity)
-            return JsonResponse({'data': None})
+            return JsonResponse({'data': None}, status=200)
         except Exception as e:
             print(e)
-            return JsonResponse({'error': 'could not add item to cart'}, status=500)
 
-    else:
-        return JsonResponse({'error': 'invalid request'}, status=500)
+    return JsonResponse({'error': 'Could not add item to cart'}, status=500)
 
 
 @require_POST
@@ -44,14 +42,15 @@ def remove_from_cart(request):
         cart = Cart.objects.get(user=request.user)
         data = request.POST
         product_id = data.get('product_id')
-        item = cart.items.all().filter(product_id=product_id)
-        quantity = data.get('quantity')
-        if quantity:
-            quantity = int(quantity)
-        else:
-            quantity = item.quantity
+        item = cart.items.all().filter(product_id=product_id).first()
+        if item:
+            quantity = data.get('quantity')
+            if quantity:
+                quantity = int(quantity)
+            else:
+                quantity = item.quantity
 
-        cart.remove_item(product_id, quantity)
-        return JsonResponse({'data': None})
-    else:
-        return JsonResponse({'error': 'invalid request'}, status=500)
+            cart.remove_item(product_id, quantity)
+            return JsonResponse({'data': None}, status=200)
+
+    return JsonResponse({'error': 'invalid request'}, status=500)

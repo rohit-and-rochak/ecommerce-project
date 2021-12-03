@@ -23,6 +23,7 @@
                 </div>
             </div>
             <br /><br />
+            <!-- Feature to add multiple addresses -->
             <div class="section-title">
                 <h4>Address</h4>
             </div>
@@ -61,13 +62,4 @@
     </div>
 </section>
 <hr>
-{% endblock %}
-{% block custom_js %}
-    <script>
-        $('#client_profile').submit(function(e){
-            e.preventDefault();
-            let data = $("#client_profile :input").serializeArray();
-            
-        });
-    </script>
 {% endblock %}

@@ -29,25 +29,25 @@
 			<div class="col-lg-6 product-details pl-md-5 ftco-animate">
 				<h3>{{ item.name }}</h3>
 				<p class="price">
-					<span class="price-dc">{{ item.price|rs }}</span>
-					<span>{{ item.discounted_price|rs }}</span>
+					{% if item.discount > 0 %}
+						<span class="price-dc">{{ item.price|rs }}</span>
+						<span>{{ item.discounted_price|rs }}</span>
+					{% else %}
+						<span>{{ item.price|rs }}</span>
+					{% endif %}
 				</p>
 				<p>{{ item.description }}</p>
 				<div class="row mt-4">
-					<div class="w-100"></div>
 					<div class="input-group col-md-6 d-flex mb-3">
-						<span class="input-group-btn mr-2">
-							<button type="button" class="quantity-left-minus btn" data-type="minus" data-field="">
-								<i class="ion-ios-remove"></i>
-							</button>
-						</span>
-						<input type="text" id="quantity" name="quantity" class="form-control input-number" value="1"
-							min="1" max="100">
-						<span class="input-group-btn ml-2">
-							<button type="button" class="quantity-right-plus btn" data-type="plus" data-field="">
-								<i class="ion-ios-add"></i>
-							</button>
-						</span>
+						<select class="custom-select" id="quantity">
+							{% for i in item_count %}
+								{% if i == 1 %}
+									<option value="{{ i }}" selected>{{ i }}</option>
+								{% else %}
+									<option value="{{ i }}">{{ i }}</option>
+								{% endif %}
+								{% endfor %}
+						</select>
 					</div>
 					<div class="w-100"></div>
 					<div class="col-md-12">
@@ -58,7 +58,7 @@
 							{% endif %}
 					</div>
 				</div>
-				<p><a href="#" class="btn btn-black py-3 px-5"><span id="add-to-cart">Add to Cart</span></a></p>
+				<p id="add-to-cart"><a href="#" class="btn btn-black py-3 px-5"><span>Add to Cart</span></a></p>
 			</div>
 		</div>
 	</div>
@@ -81,7 +81,7 @@
 				<div class="product">
 					<a href="{% url 'product' product.id %}" class="img-prod"><img class="img-fluid" src="{% static product.image.get_url %}" alt="{{ product.name }}">
 						{% if product.discount > 0 %}
-						<span class="status">{{ product.discount }}%</span>
+							<span class="status">{{ product.discount }}%</span>
 						{% endif %}
 						<div class="overlay"></div>
 					</a>
@@ -90,11 +90,11 @@
 						<div class="d-flex">
 							<div class="pricing">
 								<p class="price">
-                                    {% if product.discount == 0 %}
-                                        <span>{{ product.price|rs }}</span>
-                                    {% else %}
-                                        <span class="mr-2 price-dc">{{ product.price|rs }}</span>
-                                        <span class="price-sale">{{ product.discounted_price|rs }}</span>
+                                    {% if product.discount > 0 %}
+										<span class="mr-2 price-dc">{{ product.price|rs }}</span>
+										<span class="price-sale">{{ product.discounted_price|rs }}</span>
+									{% else %}
+										<span>{{ product.price|rs }}</span>
                                     {% endif %}
 								</p>
 							</div>
@@ -116,20 +116,25 @@
 {% endblock %}
 {% block custom_js %}
 <script>
-	$(document).ready(function(){
-		$('#add-to-cart').click(function(e){
-			e.preventDefault()
-			let product_id = "{{ item.id }}";
-			let quantity = parseInt($('#quantity').val());
-			let token = "{{ csrf_token }}";
+	$('#add-to-cart').off().on('click', function(e){
+		e.preventDefault()
+		const product_id = "{{ item.id }}";
+		const quantity = parseInt($('select#quantity option:selected').val());
+		if(quantity == 0){
+			alert('Quantity must be greater than 0');
+		}
+		else{
+			const token = "{{ csrf_token }}";
 			let data = {'product_id': product_id, 'quantity': quantity};
 			ajax_request('POST', '{% url "add-to-cart" %}', data, token).done(function(res){
 				alert('Added item successfully');
+				location.reload();
 			}).fail(function(data){
+				const response = data.responseJSON;
 				$('body').scrollTop(0);
-				show_error_message(data['error']);
+				show_error_message(response['error']);
 			});
-		});
+		}
 	});
 </script>
 {% endblock %}
