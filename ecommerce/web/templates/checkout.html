@@ -1,5 +1,5 @@
 {% extends "include/base.html" %}
-{% load static %}
+{% load static rs_filter %}
 {% block content %}
 <div class="hero-wrap hero-bread">
 	<div class="container">
@@ -22,20 +22,21 @@
 					<div class="row align-items-end">
 						<div class="col-md-6">
 							<div class="form-group">
-								<label for="firstname">Firt Name</label>
-								<input type="text" class="form-control" placeholder="">
+								<label for="firstname">First Name</label>
+								<input type="text" class="form-control" placeholder="" value="{{ request.user.first_name }}">
 							</div>
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
 								<label for="lastname">Last Name</label>
-								<input type="text" class="form-control" placeholder="">
+								<input type="text" class="form-control" placeholder="{{ request.user.last_name }}">
 							</div>
 						</div>
 						<div class="w-100"></div>
 						<div class="col-md-12">
 						</div>
 						<div class="w-100"></div>
+						<!-- feature to add/select multiple addresses -->
 						<div class="col-md-6">
 							<div class="form-group">
 								<label for="streetaddress">Street Address</label>
@@ -75,14 +76,6 @@
 							</div>
 						</div>
 						<div class="w-100"></div>
-						<div class="col-md-12">
-							<div class="form-group mt-4">
-								<div class="radio">
-									<label class="mr-3"><input type="radio" name="optradio"> Create an Account? </label>
-									<label><input type="radio" name="optradio"> Ship to different address</label>
-								</div>
-							</div>
-						</div>
 					</div>
 				</form><!-- END -->
 			</div>

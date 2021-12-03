@@ -42,7 +42,7 @@
 									<td class="price">{{ item.product.discounted_price|rs }}</td>
 									<td class="quantity">
 										<div class="input-group mb-3">
-											<select class="custom-select" id="quantity">
+											<select class="custom-select item-quantity" data-product-id="{{ item.product.id }}">
 												{% for i in item_count %}
 													{% if i == item.quantity  %}
 														<option value="{{ i }}" selected>{{ i }}</option>
@@ -62,20 +62,7 @@
 				</div>
 			</div>
 			<div class="row justify-content-end">
-				<div class="col-lg-4 mt-5 cart-wrap ftco-animate">
-					<div class="cart-total mb-3">
-						<h3>Coupon Code</h3>
-						<p>Enter your coupon code if you have one</p>
-						<form action="#" class="info">
-							<div class="form-group">
-								<label for="">Coupon code</label>
-								<input type="text" class="form-control text-left px-3" placeholder="">
-							</div>
-						</form>
-					</div>
-					<p><a href="checkout.html" class="btn btn-primary py-3 px-4">Apply Coupon</a></p>
-				</div>
-				<div class="col-lg-4 mt-5 cart-wrap ftco-animate">
+				<div class="col-lg-6 mt-5 cart-wrap ftco-animate">
 					<div class="cart-total mb-3">
 						<h3>How would you like to recieve the items?</h3>
 						<p>Choose an option that suits you.</p>
@@ -98,12 +85,12 @@
 					</div>
 					<p class="py-3 px-4"></p>
 				</div>
-				<div class="col-lg-4 mt-5 cart-wrap ftco-animate">
+				<div class="col-lg-6 mt-5 cart-wrap ftco-animate">
 					<div class="cart-total mb-3">
 						<h3>Cart Totals</h3>
 						<p class="d-flex">
 							<span>Subtotal</span>
-							<span>{{ cart_total|rs }}</span>
+							<span>{{ sub_total|rs }}</span>
 						</p>
 						<p class="d-flex">
 							<span>Delivery</span>
@@ -111,7 +98,7 @@
 						</p>
 						<p class="d-flex">
 							<span>Discount</span>
-							<span id="discount"></span>
+							<span id="discount">{{ discount|rs }}</span>
 						</p>
 						<hr>
 						<p class="d-flex total-price">
@@ -146,6 +133,19 @@
 			show_error_message(response['error']);
 		});
 	});
-	$('')
+	$('.item-quantity').off().on('change', function(){
+		const product_id = $(this).attr('data-product-id');
+		const quantity = $('select.item-quantity option:selected').val();
+		let data = {'product_id': product_id, 'quantity': quantity};
+		const token = '{{ csrf_token }}';
+		ajax_request('POST', '{% url "change-quantity" %}', data, token).done(function(res){
+			alert('Updated quantity');
+			location.reload();
+		}).fail(function(data){
+			const response = data.responseJSON;
+			$('body').scrollTop(0);
+			show_error_message(response['error']);
+		});
+	})
 </script>
 {% endblock %}

@@ -36,4 +36,9 @@ class Cart(BaseModel):
     @property
     def total_price(self):
         items = self.items.all()
+        return sum([item.product.price*item.quantity for item in items])
+
+    @property
+    def discounted_price(self):
+        items = self.items.all()
         return sum([item.product.discounted_price*item.quantity for item in items])

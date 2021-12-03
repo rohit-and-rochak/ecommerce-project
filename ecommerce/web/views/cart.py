@@ -10,12 +10,26 @@ from store.models import Cart
 def cart(request):
     cart = Cart.objects.filter(user=request.user).first()
     total_price = 0
+    discount = 0
     cart_items = []
     if cart:
         cart_items = cart.items.all()
         total_price = cart.total_price
+        discount = total_price - cart.discounted_price
 
-    return render(request, 'cart.html', {'cart_items': cart_items, 'cart_total': total_price})
+    return render(request, 'cart.html', {'cart_items': cart_items, 'sub_total': total_price, 'discount': discount})
+
+
+@login_required
+def checkout(request):
+    cart = Cart.objects.filter(user=request.user).first()
+    total_price = 0
+    discount = 0
+    if cart:
+        total_price = cart.total_price
+        discount = total_price - cart.discounted_price
+
+    return render(request, 'checkout.html', {'sub_total': total_price, 'discount': discount})
 
 
 @require_POST
@@ -54,3 +68,21 @@ def remove_from_cart(request):
             return JsonResponse({'data': None}, status=200)
 
     return JsonResponse({'error': 'invalid request'}, status=500)
+
+
+@require_POST
+@login_required
+def change_quantity(request):
+    if request.is_ajax:
+        cart = Cart.objects.get(user=request.user)
+        data = request.POST
+        product_id = data.get('product_id')
+        item = cart.items.all().filter(product_id=product_id).first()
+        if item:
+            quantity = int(data.get('quantity'))
+            item.quantity = quantity
+            item.save()
+
+            return JsonResponse({'data': None}, status=200)
+
+    return JsonResponse({'error': 'Could not change quantity'}, status=500)

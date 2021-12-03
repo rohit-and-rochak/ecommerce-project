@@ -25,11 +25,6 @@ def about(request):
     return render(request, 'about.html')
 
 
-@login_required
-def checkout(request):
-    return render(request, 'checkout.html')
-
-
 def product(request, product_id):
     item = Product.objects.get(id=product_id)
     products = Product.objects.all().exclude(id=product_id)
