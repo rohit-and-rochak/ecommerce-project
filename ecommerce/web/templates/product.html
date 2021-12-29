@@ -58,7 +58,11 @@
 							{% endif %}
 					</div>
 				</div>
-				<p id="add-to-cart"><a href="#" class="btn btn-black py-3 px-5"><span>Add to Cart</span></a></p>
+				{% if request.user.is_authenticated %}
+					<p id="add-to-cart"><a href="#" class="btn btn-black py-3 px-5"><span>Add to Cart</span></a></p>
+				{% else %}
+					<p><a href="/login" class="btn btn-black py-3 px-5"><span>Login to Add</span></a></p>
+				{% endif %}
 			</div>
 		</div>
 	</div>
