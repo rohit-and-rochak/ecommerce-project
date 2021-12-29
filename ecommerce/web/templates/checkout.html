@@ -17,19 +17,19 @@
 	<div class="container">
 		<div class="row justify-content-center">
 			<div class="col-xl-7 ftco-animate">
-				<form action="#" class="billing-form">
+				<form id="billing-form" class="billing-form" method="post">
 					<h3 class="mb-4 billing-heading">Billing Details</h3>
 					<div class="row align-items-end">
 						<div class="col-md-6">
 							<div class="form-group">
-								<label for="firstname">First Name</label>
-								<input type="text" class="form-control" placeholder="" value="{{ request.user.first_name }}">
+								<label for="first_name">First Name</label>
+								<input name="first_name" type="text" class="form-control" placeholder="" value="{{ request.user.first_name }}" required>
 							</div>
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
-								<label for="lastname">Last Name</label>
-								<input type="text" class="form-control" placeholder="{{ request.user.last_name }}">
+								<label for="last_name">Last Name</label>
+								<input name="last_name" type="text" class="form-control" placeholder="{{ request.user.last_name }}">
 							</div>
 						</div>
 						<div class="w-100"></div>
@@ -39,43 +39,48 @@
 						<!-- feature to add/select multiple addresses -->
 						<div class="col-md-6">
 							<div class="form-group">
-								<label for="streetaddress">Street Address</label>
-								<input type="text" class="form-control" placeholder="House number and street name">
+								<label for="country">Country</label>
+								<input name="country" type="text" class="form-control" value="India" readonly>
 							</div>
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
-								<input type="text" class="form-control"
-									placeholder="Appartment, suite, unit etc: (optional)">
-							</div>
-						</div>
-						<div class="w-100"></div>
-						<div class="col-md-6">
-							<div class="form-group">
-								<label for="towncity">Town / City</label>
-								<input type="text" class="form-control" placeholder="">
+								<label for="state">State</label>
+								<select name="state" class="form-control" required>
+									{% for code, state in states.items %}
+										<option value="{{ code }}">{{ state }}</option>
+									{% endfor %}
+								</select>
 							</div>
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
-								<label for="postcodezip">Postcode / ZIP *</label>
-								<input type="text" class="form-control" placeholder="">
+								<label for="raw-address">Street Address</label>
+								<input name="raw-address" type="text" class="form-control" placeholder="House number and street name" required>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="postcode">Postal Code</label>
+								<input name="postcode" type="number" min="100000" max="999999" class="form-control" placeholder="Postal Code" required>
 							</div>
 						</div>
 						<div class="w-100"></div>
 						<div class="col-md-6">
 							<div class="form-group">
 								<label for="phone">Phone</label>
-								<input type="text" class="form-control" placeholder="">
+								<input name="phone" type="number" min="1000000000" max="9999999999" class="form-control" value="{{ request.user.phone }}" required>
 							</div>
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
-								<label for="emailaddress">Email Address</label>
-								<input type="text" class="form-control" placeholder="">
+								<label for="email">Email Address</label>
+								<input name="email" type="text" class="form-control" value="{{ request.user.email }}" required>
 							</div>
 						</div>
-						<div class="w-100"></div>
+						<div class="col-12 text-center">
+							<p><button type="submit" class="btn btn-primary py-3 px-4">Place Order</a></p>
+						</div>
 					</div>
 				</form><!-- END -->
 			</div>
@@ -127,7 +132,6 @@
 									</div>
 								</div>
 							</div>
-							<p><a href="#" class="btn btn-primary py-3 px-4">Place an order</a></p>
 						</div>
 					</div>
 				</div>
@@ -169,5 +173,23 @@
 			}
 		}
 	}
+
+	$('#billing-form').off().on('submit', function(e){
+		e.preventDefault();
+		const form = $(this).serializeArray();
+		const token = "{{ csrf_token }}";
+		let data = [];
+		for(const ob of form){
+			data[ob.name] = ob.value;
+        }
+		ajax_request('POST', '{% url "place-order" %}', data, token).done(function(res){
+			alert('Placed Order');
+			location.reload();
+		}).fail(function(data){
+			const response = data.responseJSON;
+			$('body').scrollTop(0);
+			show_error_message(response['error']);
+		});
+	});
 </script>
 {% endblock %}

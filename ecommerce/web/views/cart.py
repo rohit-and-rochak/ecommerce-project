@@ -3,6 +3,8 @@ from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from django.shortcuts import render
 
+from base.constants import STATE_CHOICES
+from base.models import User
 from store.models import Cart
 
 
@@ -29,7 +31,7 @@ def checkout(request):
         total_price = cart.total_price
         discount = total_price - cart.discounted_price
 
-    return render(request, 'checkout.html', {'sub_total': total_price, 'discount': discount})
+    return render(request, 'checkout.html', {'sub_total': total_price, 'discount': discount, 'states': STATE_CHOICES})
 
 
 @require_POST
@@ -54,7 +56,7 @@ def add_to_cart(request):
 @require_POST
 def remove_from_cart(request):
     if not request.user.is_authenticated:
-        return JsonResponse({'error': 'Login to add products'}, status=500)
+        return JsonResponse({'error': 'Unauthorized request'}, status=500)
 
     if request.is_ajax:
         cart = Cart.objects.get(user=request.user)
@@ -75,8 +77,10 @@ def remove_from_cart(request):
 
 
 @require_POST
-@login_required
 def change_quantity(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Unauthorized request'}, status=500)
+
     if request.is_ajax:
         cart = Cart.objects.get(user=request.user)
         data = request.POST
@@ -90,3 +94,26 @@ def change_quantity(request):
             return JsonResponse({'data': None}, status=200)
 
     return JsonResponse({'error': 'Could not change quantity'}, status=500)
+
+
+@require_POST
+def place_order(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Unauthorized requests'}, status=500)
+
+    if request.is_ajax:
+        user_keys = ['first_name', 'last_name', 'phone', 'email']
+        address_keys = ['country', 'state', 'raw-address', 'pincode']
+        data = request.POST
+
+        user = User()
+        for key in user_keys:
+            setattr(user, key, data.get(key))
+
+        user.save()
+
+
+
+        return JsonResponse({'data': None}, status=200)
+
+    return JsonResponse({'error': 'Could not place order'}, status=500)

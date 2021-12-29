@@ -16,4 +16,5 @@ urlpatterns = [
     path('change-quantity/', cart.change_quantity, name="change-quantity"),
     path('add_to_cart/', cart.add_to_cart, name="add-to-cart"),
     path('remove_from_cart/', cart.remove_from_cart, name="remove-from-cart"),
+    path('place_order/', cart.place_order, name='place-order'),
 ]
